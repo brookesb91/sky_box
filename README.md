@@ -13,6 +13,8 @@ Example Sky boxes by Emil Persson, aka Humus. [Their work](http://www.humus.name
 
 A sky box is a cube with 6 textures on the inside. The cube is constructed around the view point and warped to look like a sphere.
 
+![Cube faces visualisation](images/example.gif)
+
 Each texture is a dart:ui Image object. 6 images are required, one for both positive and negative x, y and z axis.
 
 | Axis | Image    |
