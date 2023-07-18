@@ -21,8 +21,6 @@ class SkyBoxPainter extends CustomPainter {
   final double yaw;
   final double fov;
   final double perspective;
-  final double near = 0.1;
-  final double far = 10000;
 
   SkyBoxPainter({
     required this.top,
