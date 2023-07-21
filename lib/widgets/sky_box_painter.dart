@@ -5,30 +5,20 @@ import 'package:vector_math/vector_math_64.dart' as vector;
 
 class _Face {
   final Matrix4 transform;
-  final ui.Image image;
+  final Offset offset;
 
-  _Face(this.transform, this.image);
+  _Face(this.transform, this.offset);
 }
 
 class SkyBoxPainter extends CustomPainter {
-  final ui.Image top;
-  final ui.Image front;
-  final ui.Image right;
-  final ui.Image back;
-  final ui.Image left;
-  final ui.Image bottom;
+  final ui.Image image;
   final double pitch;
   final double yaw;
   final double fov;
   final double perspective;
 
   SkyBoxPainter({
-    required this.top,
-    required this.front,
-    required this.right,
-    required this.back,
-    required this.left,
-    required this.bottom,
+    required this.image,
     required this.pitch,
     required this.yaw,
     this.fov = 150,
@@ -59,8 +49,11 @@ class SkyBoxPainter extends CustomPainter {
     final double dim = size.height.toDouble();
     final double dim2 = dim / 2;
 
-    final src =
-        Rect.fromLTWH(0, 0, front.width.toDouble(), front.height.toDouble());
+    final sx = image.width.toDouble() / 4;
+    final sy = image.height.toDouble() / 3;
+
+    // final src =
+    //     Rect.fromLTWH(0, 0, front.width.toDouble(), front.height.toDouble());
 
     final dest = Rect.fromCenter(
       center: const Offset(0, 0),
@@ -83,48 +76,62 @@ class SkyBoxPainter extends CustomPainter {
     });
 
     for (final face in faces.reversed) {
+      final src =
+          Rect.fromLTWH(face.offset.dx * sx, face.offset.dy * sy, sx, sy);
+
       canvas.save();
       canvas.transform(face.transform.storage);
-      canvas.drawImageRect(face.image, src, dest, paint);
+      canvas.drawImageRect(image, src, dest, paint);
       canvas.restore();
     }
   }
 
   List<_Face> _createFaces(Matrix4 transform, double size) {
     return [
+      /// Front
       _Face(
         transform.clone()..translate(vector.Vector3(0, 0, size)),
-        front,
+        const Offset(1, 1),
       ),
+
+      /// Right
       _Face(
         transform.clone()
           ..translate(vector.Vector3(size, 0, 0))
           ..rotateY(vector.radians(90)),
-        right,
+        const Offset(2, 1),
       ),
+
+      /// Back
       _Face(
         transform.clone()
           ..translate(vector.Vector3(0, 0, -size))
           ..rotateY(vector.radians(180)),
-        back,
+        const Offset(3, 1),
       ),
+
+      /// Left
       _Face(
         transform.clone()
           ..translate(vector.Vector3(-size, 0, 0))
           ..rotateY(vector.radians(270)),
-        left,
+        const Offset(0, 1),
       ),
+
+      /// Bottom
       _Face(
         transform.clone()
           ..translate(vector.Vector3(0, size, 0))
           ..rotateX(vector.radians(270)),
-        bottom,
+        const Offset(1, 2),
       ),
+
+      /// Top
       _Face(
         transform.clone()
           ..translate(vector.Vector3(0, -size, 0))
           ..rotateX(vector.radians(90)),
-        top,
+        const Offset(1, 0),
       ),
     ];
   }
