@@ -52,9 +52,6 @@ class SkyBoxPainter extends CustomPainter {
     final sx = image.width.toDouble() / 4;
     final sy = image.height.toDouble() / 3;
 
-    // final src =
-    //     Rect.fromLTWH(0, 0, front.width.toDouble(), front.height.toDouble());
-
     final dest = Rect.fromCenter(
       center: const Offset(0, 0),
       width: dim,
